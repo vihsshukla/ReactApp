@@ -11,26 +11,52 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { signUp } from '@aws-amplify/auth';
+import { useState } from 'react';
 import './SignUp.css';
+import ConfirmationModal from './ConfirmationModal';
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
-export default function SignUp() {
+const SignUp=()=> {
+  const [confirmSignup,setConfirmsignup]=useState(false);
+  const [username,setUsername]=useState('');
   const navigate=useNavigate();
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    let user=data.get('email');
+    setUsername(user);
+    const password=data.get('password');
+    const name=data.get('firstName');
+    const familyName=data.get('lastName');
+
+    try{
+      const {Username}=await signUp({
+        username,
+        password,
+        options:{
+          userAttributes:{
+            name:name,
+            email:username,
+            family_name: familyName
+          },
+          autoSign: true
+        }
+      });
+      console.log({Username});
+      setConfirmsignup(true);
+    }catch(err){
+      console.log("Error while signing up: ",err);
+    }
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      {confirmSignup && <ConfirmationModal confirmSignup={confirmSignup} setConfirmSignup={setConfirmsignup} username={username}/>}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -116,3 +142,5 @@ export default function SignUp() {
     </ThemeProvider>
   );
 }
+
+export default SignUp;
