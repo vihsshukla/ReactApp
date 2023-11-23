@@ -20,18 +20,18 @@ import './SignIn.css';
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
-  const handleSubmit = async(event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const username=data.get('email');
-    const password=data.get('password');
-    try{
-     const user=await signIn({username,password});
-     console.log(user);
-    }catch(err){
-      throw Error ("Error whiler signing in",err);
+    const username = data.get('email');
+    const password = data.get('password');
+    try {
+      const user = await signIn({ username, password });
+      console.log(user);
+    } catch (err) {
+      throw Error("Error whiler signing in", err);
     }
   };
 
@@ -96,6 +96,7 @@ export default function SignIn() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                onClick={() => navigate('/dashboard')}
               >
                 Sign In
               </Button>
@@ -106,7 +107,7 @@ export default function SignIn() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link color="rgb(13, 38, 199)" href="#" variant="body2" onClick={()=>navigate('/signup')}>
+                  <Link color="rgb(13, 38, 199)" href="#" variant="body2" onClick={() => navigate('/signup')}>
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
