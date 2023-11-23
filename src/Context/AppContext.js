@@ -1,22 +1,23 @@
-import { createContext, useState, useEffect } from "react";
-import {useLocation} from "react-router-dom";
-export const Context=createContext(null);
-export const AppContext=({children})=>{
+import { createContext, useState } from "react";
+export const AlertContext=createContext("");
+export const AppContext=(props)=>{
     const [showAlert,setShowAlert]=useState(false);
-    const [alert,setAlert]=useState({severity:'',displayText:''});
-    const location=useLocation();
-    useEffect(()=>{
-        window.scrollTo(0,0);
-    },[location]);
+    const [alert,setAlert]=useState(undefined);
 
-    return <Context.Provider value={{
+    const addAlertDetails=(severity,displayText)=>{
+        setAlert({severity,displayText});
+    }
+
+    const setAlertStatus=(status)=>{
+        setShowAlert(status);
+    }
+
+    return (<AlertContext.Provider value={{
         showAlert,
-        setShowAlert,
+        setAlertStatus,
         alert,
-        setAlert
-    }}>
-        {children}
-    </Context.Provider>;
+        addAlertDetails
+    }} >{props.children}</AlertContext.Provider>);
 }
 
 export default AppContext;

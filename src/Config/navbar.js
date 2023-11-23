@@ -1,0 +1,1 @@
+export const navbarItems=[{id:'home',displayText:'Home',redirectto:'/'},{id:'about',displayText:'About us',redirectto:'/'},{id:'contacts',displayText:'Contact us',redirectto:'/'},{id:'login',displayText:'Sign in',redirectto:'/signin',navbarType:'Button'},{id:'enroll',displayText:'Sign up',redirectto:'/signup',navbarType:'Button'}];

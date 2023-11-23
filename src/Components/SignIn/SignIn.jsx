@@ -12,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { signIn } from 'aws-amplify/auth';
+import { AlertContext } from '../../Context/AppContext';
+import { useContext } from 'react';
 import './SignIn.css';
 
 
@@ -20,7 +22,9 @@ import './SignIn.css';
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  const {setAlertStatus,addAlertDetails}=useContext(AlertContext);
   const navigate = useNavigate();
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -28,8 +32,15 @@ export default function SignIn() {
     const username = data.get('email');
     const password = data.get('password');
     try {
-      const user = await signIn({ username, password });
-      console.log(user);
+      const {isSignedIn} = await signIn({ username, password });
+      console.log({isSignedIn});
+      if(isSignedIn){
+        navigate('/dashboard');
+        addAlertDetails("success","Successfully Signed into the application.");
+      }else{
+        addAlertDetails("error","Issue in signing in. Create Ticket");
+      }
+      setAlertStatus(true);
     } catch (err) {
       throw Error("Error whiler signing in", err);
     }
@@ -96,7 +107,6 @@ export default function SignIn() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                onClick={() => navigate('/dashboard')}
               >
                 Sign In
               </Button>
