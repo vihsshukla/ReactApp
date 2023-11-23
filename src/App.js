@@ -9,19 +9,22 @@ import { AlertContext } from './Context/AppContext';
 import GenericAlert from './Components/Alert/Alert';
 import { useContext } from 'react';
 import { navbarItems } from './Config/navbar';
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 
 function App() {
   const {showAlert,alert}=useContext(AlertContext);
   console.log({showAlert,alert});
   return (
     <BrowserRouter><Navbar navbarItems={navbarItems}/>
-          {showAlert && alert && <GenericAlert severity={alert?.severity} displayText={alert?.displayText}/>}
-          <Routes>
-            <Route path='/' element={<Home />}></Route>
-            <Route path='/signin' element={<SignIn />}></Route>
-            <Route path='/signup' element={<SignUp />}></Route>
-            <Route path='/dashboard' element={<Dashboard />}></Route>
-          </Routes>
+      <ErrorBoundary>
+        {showAlert && alert && <GenericAlert severity={alert?.severity} displayText={alert?.displayText}/>}
+      </ErrorBoundary>  
+      <Routes>
+        <Route path='/' element={<ErrorBoundary><Home /></ErrorBoundary>}></Route>
+        <Route path='/signin' element={<ErrorBoundary><SignIn /></ErrorBoundary>}></Route>
+        <Route path='/signup' element={<ErrorBoundary><SignUp /></ErrorBoundary>}></Route>
+        <Route path='/dashboard' element={<ErrorBoundary><Dashboard /></ErrorBoundary>}></Route>
+      </Routes>
     </BrowserRouter>
   );
 }
