@@ -6,14 +6,20 @@ import reportWebVitals from './reportWebVitals';
 import { Amplify } from 'aws-amplify';
 import awsExports from './aws-exports';
 import AppContext from './Context/AppContext';
-import AuthState from './Context/Auth/AuthState';
 import { SnackbarProvider } from 'notistack';
+import SigninState from './Context/Signin/SigninState';
 Amplify.configure(awsExports);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <SnackbarProvider><AppContext><AuthState><App /></AuthState></AppContext></SnackbarProvider>
+    <SnackbarProvider>
+      <AppContext>
+        <SigninState>
+          <App />
+        </SigninState>
+      </AppContext>
+    </SnackbarProvider>
   </React.StrictMode>
 );
 

@@ -15,6 +15,7 @@ import { signIn } from 'aws-amplify/auth';
 import { AlertContext } from '../../Context/AppContext';
 import { useContext } from 'react';
 import './SignIn.css';
+// import SigninContext from '../../Context/Signin/SigninContext';
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -22,9 +23,15 @@ import './SignIn.css';
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const {setAlertStatus,addAlertDetails}=useContext(AlertContext);
+  const { setAlertStatus, addAlertDetails } = useContext(AlertContext);
+  // const { updateSignedInValue } = useContext(SigninContext);
   const navigate = useNavigate();
 
+  const isSignedIn = localStorage.getItem("isSignedIn");
+  console.log({ Signin: isSignedIn });
+  React.useEffect(() => {
+    { isSignedIn === 'true' && navigate('/dashboard') }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,13 +39,14 @@ export default function SignIn() {
     const username = data.get('email');
     const password = data.get('password');
     try {
-      const {isSignedIn} = await signIn({ username, password });
-      console.log({isSignedIn});
-      if(isSignedIn){
+      const { isSignedIn } = await signIn({ username, password });
+      console.log({ isSignedIn });
+      if (isSignedIn) {
+        localStorage.setItem("isSignedIn", isSignedIn);
         navigate('/dashboard');
-        addAlertDetails("success","Successfully Signed into the application.");
-      }else{
-        addAlertDetails("error","Issue in signing in. Create Ticket");
+        addAlertDetails("success", "Successfully Signed into the application.");
+      } else {
+        addAlertDetails("error", "Issue in signing in. Create Ticket");
       }
       setAlertStatus(true);
     } catch (err) {
